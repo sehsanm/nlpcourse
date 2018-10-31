@@ -20,15 +20,15 @@ def read_conll_file(address):
                 elif len(item) < 6:
                     print('Warning Line [ ', line_number, '] has  ', len(item), ' tokens it must be 6')
                     item[len(item):6] = '_' * (6 - len(item))
-            stripped = []
-            for it in item:
-                s = it.strip()
-                if len(s) == 0:
-                    s = '_'
-                stripped.append(s)
+                stripped = []
+                for it in item:
+                    s = it.strip()
+                    if len(s) == 0:
+                        s = '_'
+                    stripped.append(s)
+                    ret.append(stripped)
             line = f.readline()
             line_number += 1
-            ret.append(stripped)
     return ret
 
 
@@ -42,27 +42,11 @@ def longest_common_subsequence_length(s1, s2):
         c[0][j] = 0
     for i in range(1, m + 1):
         for j in range(1, n + 1):
-            if s1[i - 1] == s2[j - 1]:
+            if s1[i - 1] == s2[j - 1] and s1[i - 1] != '_':  # As _ is equal to empty we will not match them!
                 c[i][j] = c[i - 1][j - 1] + 1
             else:
                 c[i][j] = max(c[i][j - 1], c[i - 1][j])
     return c[m][n]
-
-
-"""
-def longest_common_substring(s1, s2):
-    m = [[0] * (1 + len(s2)) for i in range(1 + len(s1))]
-    longest = 0
-    for x in range(1, 1 + len(s1)):
-        for y in range(1, 1 + len(s2)):
-            if s1[x - 1] == s2[y - 1]:
-                m[x][y] = m[x - 1][y - 1] + 1
-                if m[x][y] > longest:
-                    longest = m[x][y]
-            else:
-                m[x][y] = 0
-    return longest
-"""
 
 
 def compare_term(ref_items, out_items, ind):  # ind 1:normalized token, 2:stem, 3:lemma
@@ -73,9 +57,17 @@ def compare_term(ref_items, out_items, ind):  # ind 1:normalized token, 2:stem, 
     return count
 
 
-def compare_segment(ref_sentences, out_sentences):
-    count = longest_common_subsequence_length(ref_sentences, out_sentences)
-    return count / ref_sentences.count()
+def compare_segment(ref_items, out_items):
+    ref_seg = []
+    out_seg = []
+    for ind, r in enumerate(ref_items):
+        if len(r) == 0 and ind > 0 and ind < (len(ref_items) - 1) and len(ref_items[ind + 1]) >= 2:
+            ref_seg.append(ref_items[ind - 1][1] + '_' + ref_items[ind + 1][1])
+
+    for ind, r in enumerate(out_items):
+        if len(r) == 0 and ind > 0 and ind < (len(out_items) - 1):
+            out_seg.append(out_items[ind - 1][1] + '_' + out_items[ind + 1][1])
+    return longest_common_subsequence_length(ref_seg, out_seg)
 
 
 def extract_scores():
@@ -111,7 +103,7 @@ def extract_scores():
     with open('../scores/tokenization.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',',
                             quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow(['Team', 'Reference Team', 'Token Score', 'Stem Score', 'Lemma Score'])
+        writer.writerow(['Team', 'Reference Team', 'Segment Score', 'Token Score', 'Stem Score', 'Lemma Score'])
         for r in all_results:
             writer.writerow(r)
 
@@ -131,13 +123,13 @@ def reduce_column(lst, column):
 def score_file(output_file, ref_file):
     ref_items = read_conll_file(ref_file)
     out_items = read_conll_file(output_file)
-    # segment_score = compare_segment(ref_sentences, out_sentences)
+    segment_score = compare_segment(ref_items, out_items)
     token_score = compare_term(ref_items, out_items, 1)
     stem_score = compare_term(ref_items, out_items, 2)
     lemma_score = compare_term(ref_items, out_items, 3)
 
-    print('Token score:', token_score, ' Stem Score: ', stem_score, ' Lemma Score: ', lemma_score)
-    return [token_score, stem_score, lemma_score]
+    print('Segment Score' ,segment_score,  'Token score:', token_score, ' Stem Score: ', stem_score, ' Lemma Score: ', lemma_score)
+    return [segment_score, token_score, stem_score, lemma_score]
 
 
 def main():

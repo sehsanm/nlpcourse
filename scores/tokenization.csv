@@ -1,3 +1,2 @@
-Team,Reference Team,Token Score,Stem Score,Lemma Score
-RezaSi,sample,23,22,22
-sample,sample,30,31,31
+Team,Reference Team,Segment Score,Token Score,Stem Score,Lemma Score
+sample,sample,2,162,168,168
