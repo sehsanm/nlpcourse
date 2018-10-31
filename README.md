@@ -29,7 +29,7 @@ The (.out) file is a tab(\t) delimited format.  Each line of the file starts wit
 5. Morphological Structure of the token. Once the morphemes are detected the have to be concatenated by ```+``` character. If there are multiple morphological structures then you can separate them with ```|``` character 
 6. Morphological Analysis of the token. The number of elements in analysis column should be equal to the number of elements in Morphological structure column (separate by ```|```) Use the tokens mentioned [Here](#Morphological-Analysis).
 
-If a token is punctuation or your tool does not produced a value for specific column make sure that you will be leaving a ```_``` in the that column. Except for end of sentence each line must have 6 tabs characters (\t). An empty line means end of a sentence.  
+If a token is punctuation or your tool does not produced a value for specific column make sure that you will be leaving a ```_``` in the that column. Except for end of sentence each line must have 5 tabs characters (\t). An empty line means end of a sentence.  
 
 The whitespaces between the tokens should be ignored. (you must include them if they are in middle of the detected tokens). Following characters are considered white spaces: 
 * \r
