@@ -1,0 +1,1 @@
+In this folder results of the scores will be stored. 
