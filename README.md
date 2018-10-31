@@ -23,12 +23,11 @@ Normalization is the basic step of this competition. We are not going to score y
 With each input file the tools must produce a file with same name but a different  extension (.out)
 The (.out) file is a tab(\t) delimited format.  Each line of the file starts with the token that is identified. The format is based on CONLL file format.  Here is the columns of the file: 
 1. Index of the token in the sentence. Starting from 0 
-2. Word form which is the result of the Tokenization 
-3. Normalized form of the Token 
-4. Stem of the token from stemmer 
-5. Lemma of the token  from the Lemmatizer 
-6. Morphological Structure of the token. Once the morphemes are detected the have to be concatenated by ```+``` character. If there are multiple morphological structures then you can separate them with ```|``` character 
-7. Morphological Analysis of the token. The number of elements in analysis column should be equal to the number of elements in Morphological structure column (separate by ```|```) Use the tokens mentioned [Here](#Morphological-Analysis).
+2. Normalized word form which is the result of the Tokenization and Normalization
+3. Stem of the token from stemmer 
+4. Lemma of the token  from the Lemmatizer 
+5. Morphological Structure of the token. Once the morphemes are detected the have to be concatenated by ```+``` character. If there are multiple morphological structures then you can separate them with ```|``` character 
+6. Morphological Analysis of the token. The number of elements in analysis column should be equal to the number of elements in Morphological structure column (separate by ```|```) Use the tokens mentioned [Here](#Morphological-Analysis).
 
 If a token is punctuation or your tool does not produced a value for specific column make sure that you will be leaving a ```_``` in the that column. Except for end of sentence each line must have 6 tabs characters (\t). An empty line means end of a sentence.  
 
@@ -91,7 +90,13 @@ For morphological analysis the possible tag values are as follows. If your tool 
 |V3| فعل اسنادی|V|
 |V4|فعل وجه نما|V|
 |V5|فعل کمکی|V|
+|V6|فعل امر|V|
 |VPr | پیشوند فعل|VPr|
+|Pl| علامت جمع| Pl| 
+|Y|  حرف ی| Y| 
+|Neg| علامت نفی|Neg|
+|O| هر گونه وندی که در دسته های قبل نبود|O|
+
 
 # How to participate 
 This is a multi phase competition and the aim is to build a good test and evaluation set at the end. We also promote open-source culture to re-use each other's achievements. 
