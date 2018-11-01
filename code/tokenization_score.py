@@ -26,7 +26,7 @@ def read_conll_file(address):
                     if len(s) == 0:
                         s = '_'
                     stripped.append(s)
-                    ret.append(stripped)
+                ret.append(stripped)
             line = f.readline()
             line_number += 1
     return ret
@@ -74,11 +74,6 @@ def extract_scores():
     path = '../data'
     files = os.scandir(path)
     references = []
-    with open('../tokenization.csv', 'w', newline='\r\n') as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=' ',
-                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        spamwriter.writerow(['Spam'] * 5 + ['Baked Beans'])
-        spamwriter.writerow(['Spam', 'Lovely Spam', 'Wonderful Spam'])
     for f in files:
         if f.is_dir():
             print('Processing Folder : ', f.name)
@@ -103,7 +98,7 @@ def extract_scores():
     with open('../scores/tokenization.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',',
                             quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow(['Team', 'Reference Team', 'Segment Score', 'Token Score', 'Stem Score', 'Lemma Score'])
+        writer.writerow(['Team', 'Reference Team', 'Total Tokens' ,  'Segment Score', 'Token Score', 'Stem Score', 'Lemma Score'])
         for r in all_results:
             writer.writerow(r)
 
@@ -129,7 +124,7 @@ def score_file(output_file, ref_file):
     lemma_score = compare_term(ref_items, out_items, 3)
 
     print('Segment Score' ,segment_score,  'Token score:', token_score, ' Stem Score: ', stem_score, ' Lemma Score: ', lemma_score)
-    return [segment_score, token_score, stem_score, lemma_score]
+    return [len(ref_items), segment_score, token_score, stem_score, lemma_score]
 
 
 def main():
@@ -138,4 +133,5 @@ def main():
     extract_scores()
 
 
-main()
+if __name__ == "__main__":
+    main()
