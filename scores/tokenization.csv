@@ -1,2 +1,2 @@
-Team,Reference Team,Segment Score,Token Score,Stem Score,Lemma Score
-sample,sample,2,162,168,168
+Team,Reference Team,Total Tokens,Segment Score,Token Score,Stem Score,Lemma Score
+sample,sample,32,2,27,28,28
