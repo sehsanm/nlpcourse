@@ -15,10 +15,10 @@ def read_conll_file(address):
             elif line:
                 item = line.split('\t')
                 if len(item) > 6:
-                    print('Warning Line [ ', line_number, '] has  ', len(item), ' tokens it must be 6')
-                    item = item[0:6]
+                    # print('Warning Line [ ', line_number, '] has  ', len(item), ' tokens it must be 6')
+                    item = item[0:7]
                 elif len(item) < 6:
-                    print('Warning Line [ ', line_number, '] has  ', len(item), ' tokens it must be 6')
+                    # print('Warning Line [ ', line_number, '] has  ', len(item), ' tokens it must be 6')
                     item[len(item):6] = '_' * (6 - len(item))
                 stripped = []
                 for it in item:
@@ -57,16 +57,20 @@ def compare_term(ref_items, out_items, ind):  # ind 1:normalized token, 2:stem, 
     return count
 
 
-def compare_segment(ref_items, out_items):
-    ref_seg = []
-    out_seg = []
-    for ind, r in enumerate(ref_items):
-        if len(r) == 0 and ind > 0 and ind < (len(ref_items) - 1) and len(ref_items[ind + 1]) >= 2 and len(ref_items[ind - 1]) >= 2:
-            ref_seg.append(ref_items[ind - 1][1] + '_' + ref_items[ind + 1][1])
+def extract_segment_part(items):
+    ret = []
+    for ind, r in enumerate(items):
+        if len(r) == 0 and ind > 0 and \
+                ind < (len(items) - 1) and \
+                len(items[ind + 1]) >= 2 and len(items[ind - 1]) >= 2:
+            ret.append(items[ind - 1][1] + '_' + items[ind + 1][1])
+    return ret
 
-    for ind, r in enumerate(out_items):
-        if len(r) == 0 and ind > 0 and ind < (len(out_items) - 1) and len(out_items[ind + 1]) >= 2 and len(out_items[ind - 1]) >= 2:
-            out_seg.append(out_items[ind - 1][1] + '_' + out_items[ind + 1][1])
+
+def compare_segment(ref_items, out_items):
+    ref_seg = extract_segment_part(ref_items)
+    out_seg = extract_segment_part(out_items)
+
     return longest_common_subsequence_length(ref_seg, out_seg)
 
 
@@ -85,7 +89,7 @@ def extract_scores():
     all_results = []
     for f in os.scandir(path):
         if f.is_dir():
-            output_files = os.listdir(path + '/' + f.name + '/');
+            output_files = os.listdir(path + '/' + f.name + '/')
             for of in output_files:
                 if of.endswith('.out'):
                     other_folder = of[:-4]
@@ -98,7 +102,8 @@ def extract_scores():
     with open('../scores/tokenization.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',',
                             quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow(['Team', 'Reference Team', 'Total Tokens' ,  'Segment Score', 'Token Score', 'Stem Score', 'Lemma Score'])
+        writer.writerow(
+            ['Team', 'Reference Team', 'Total Tokens', 'Segment Score', 'Token Score', 'Stem Score', 'Lemma Score'])
         for r in all_results:
             writer.writerow(r)
 
@@ -123,7 +128,8 @@ def score_file(output_file, ref_file):
     stem_score = compare_term(ref_items, out_items, 2)
     lemma_score = compare_term(ref_items, out_items, 3)
 
-    print('Segment Score' ,segment_score,  'Token score:', token_score, ' Stem Score: ', stem_score, ' Lemma Score: ', lemma_score)
+    print('Segment Score', segment_score, 'Token score:', token_score, ' Stem Score: ', stem_score, ' Lemma Score: ',
+          lemma_score)
     return [len(ref_items), segment_score, token_score, stem_score, lemma_score]
 
 
@@ -135,3 +141,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
