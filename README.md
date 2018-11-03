@@ -114,7 +114,7 @@ Each team will have a dedicated folder.  The folder name must be your team name.
 The input file name must be **Your_Team_Name.txt** 
 
 ## Phase III: Run your code 
-Download all of the input files and run your code on them.  Then upload your results back to the repository. Use pull requests as mentioned above. Your output files must be stored in your own folder and the file name should be the same as the input file but with **.ref** extension. 
+Download all of the input files and run your code on them.  Then upload your results back to the repository. Use pull requests as mentioned above. Your output files must be stored in your own folder and the file name should be the same as the input file but with **.out** extension. 
 
 > Please note that you should run your code on all other teams' input files as well. 
 
